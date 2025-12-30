@@ -10,7 +10,7 @@ Base URL: `http://localhost:3000/api/v1`
 **Description:** Check if the server is running and healthy.
 
 ```bash
-curl -X GET http://localhost:3000/api/v1/health
+curl -X GET http://localhost:3010/api/v1/health
 ```
 
 **Response:**
@@ -37,7 +37,7 @@ curl -X GET http://localhost:3000/api/v1/health
 **Description:** Register a new user with email and password. Email is automatically verified.
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/register \
+curl -X POST http://localhost:3011/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -73,7 +73,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 **Description:** Register a new user with email only. An OTP will be sent for verification.
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/register \
+curl -X POST http://localhost:3011/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com"
@@ -107,7 +107,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 **Description:** Login with email and password. Returns JWT token on success.
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/login \
+curl -X POST http://localhost:3011/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -150,10 +150,10 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 **Description:** Request an OTP to login via email.
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/login-otp \
+curl -X POST http://localhost:3011/api/v1/auth/login-otp \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com"
+    "email": "dk@vnnogile.com"
   }'
 ```
 
