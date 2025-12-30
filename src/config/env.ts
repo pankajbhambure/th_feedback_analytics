@@ -13,6 +13,13 @@ const envSchema = z.object({
   DB_PASSWORD: z.string(),
   JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.string().default('7d'),
+  EMAIL_PROVIDER: z.enum(['gmail', 'outlook']),
+  EMAIL_FROM: z.string().email(),
+  EMAIL_FROM_NAME: z.string(),
+  GMAIL_USER: z.string().optional(),
+  GMAIL_APP_PASSWORD: z.string().optional(),
+  OUTLOOK_USER: z.string().optional(),
+  OUTLOOK_PASSWORD: z.string().optional(),
 });
 
 const parseEnv = () => {

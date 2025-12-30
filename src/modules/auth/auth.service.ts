@@ -10,6 +10,7 @@ import { OtpPurpose } from '../../models/otp.model';
 import { UserStatus } from '../../models/user.model';
 import { generateToken } from '../../utils/jwt';
 import { generateOtp, getOtpExpiry, isOtpExpired } from '../../utils/otp';
+import { sendOtpEmail } from '../../utils/email';
 import {
   RegisterInput,
   LoginInput,
@@ -95,6 +96,8 @@ export const register = async (data: RegisterInput) => {
       expiresAt: getOtpExpiry(),
       createdAt: new Date(),
     });
+
+    await sendOtpEmail(email, otpCode, 'register');
 
     return {
       message: 'OTP sent to your email',
@@ -193,6 +196,8 @@ export const loginWithOtp = async (data: LoginOtpInput) => {
     expiresAt: getOtpExpiry(),
     createdAt: new Date(),
   });
+
+  await sendOtpEmail(email, otpCode, 'login');
 
   return {
     message: 'If the email exists, an OTP has been sent',
@@ -296,6 +301,8 @@ export const forgotPassword = async (data: ForgotPasswordInput) => {
     expiresAt: getOtpExpiry(),
     createdAt: new Date(),
   });
+
+  await sendOtpEmail(email, otpCode, 'reset_password');
 
   return {
     message: 'If the email exists, a password reset OTP has been sent',
