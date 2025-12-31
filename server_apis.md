@@ -76,7 +76,7 @@ curl -X POST http://localhost:3011/api/v1/auth/register \
 curl -X POST http://localhost:3011/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com"
+    "email": "dk@vnnogile.com"
   }'
 ```
 
