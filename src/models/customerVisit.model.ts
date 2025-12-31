@@ -74,11 +74,11 @@ CustomerVisit.init(
       allowNull: false,
     },
     feedbackDate: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     visitDate: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     visitDay: {

@@ -154,3 +154,12 @@
 2025-12-31 10:34:00:340 [37mdebug[39m: [37mExecuting (default): SELECT COUNT(*) as total[39m
 [37m      FROM pg_indexes[39m
 [37m      WHERE schemaname = 'public'[39m
+2025-12-31 11:21:30:2130 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, datetime_precision[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'customer_visits'[39m
+[37m        AND column_name IN ('visitDate', 'feedbackDate')[39m
+[37m      ORDER BY column_name[39m
+2025-12-31 11:21:30:2130 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, datetime_precision[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'feedback_responses'[39m
+[37m        AND column_name = 'responseDate'[39m
