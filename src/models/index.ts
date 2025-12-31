@@ -2,6 +2,7 @@ import User from './user.model';
 import Role from './role.model';
 import UserRole from './userRole.model';
 import Otp from './otp.model';
+import Channel from './channel.model';
 
 User.belongsToMany(Role, {
   through: UserRole,
@@ -27,4 +28,4 @@ Otp.belongsTo(User, {
   as: 'user',
 });
 
-export { User, Role, UserRole, Otp };
+export { User, Role, UserRole, Otp, Channel };
