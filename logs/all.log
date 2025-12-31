@@ -1,0 +1,34 @@
+2025-12-31 10:06:16:616 [37mdebug[39m: [37mExecuting (default): SELECT name FROM "SequelizeMeta" [39m
+[37m      ORDER BY name[39m
+2025-12-31 10:06:17:617 [37mdebug[39m: [37mExecuting (default): SELECT id, "regionName", "createdAt" [39m
+[37m      FROM regions [39m
+[37m      ORDER BY "regionName"[39m
+2025-12-31 10:06:17:617 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        s."storeId", [39m
+[37m        s."storeCode", [39m
+[37m        s.city, [39m
+[37m        r."regionName",[39m
+[37m        s."isActive"[39m
+[37m      FROM stores s[39m
+[37m      JOIN regions r ON s."regionId" = r.id[39m
+[37m      ORDER BY s."storeId"[39m
+2025-12-31 10:06:17:617 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        tablename,[39m
+[37m        indexname[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE tablename IN ('regions', 'stores')[39m
+[37m        AND schemaname = 'public'[39m
+[37m      ORDER BY tablename, indexname[39m
+2025-12-31 10:06:17:617 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        tc.constraint_name,[39m
+[37m        tc.table_name,[39m
+[37m        kcu.column_name,[39m
+[37m        ccu.table_name AS foreign_table_name,[39m
+[37m        ccu.column_name AS foreign_column_name[39m
+[37m      FROM information_schema.table_constraints AS tc[39m
+[37m      JOIN information_schema.key_column_usage AS kcu[39m
+[37m        ON tc.constraint_name = kcu.constraint_name[39m
+[37m      JOIN information_schema.constraint_column_usage AS ccu[39m
+[37m        ON ccu.constraint_name = tc.constraint_name[39m
+[37m      WHERE tc.constraint_type = 'FOREIGN KEY'[39m
+[37m        AND tc.table_name = 'stores'[39m
