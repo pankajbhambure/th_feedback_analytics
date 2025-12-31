@@ -72,3 +72,85 @@
 2025-12-31 10:12:36:1236 [37mdebug[39m: [37mExecuting (default): SELECT COUNT(*) as count[39m
 [37m      FROM pg_indexes[39m
 [37m      WHERE tablename = 'customer_visits'[39m
+2025-12-31 10:32:05:325 [37mdebug[39m: [37mExecuting (default): SELECT name FROM "SequelizeMeta" [39m
+[37m      WHERE name LIKE '%rating%' OR name LIKE '%feedback%'[39m
+[37m      ORDER BY name[39m
+2025-12-31 10:32:06:326 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, is_nullable[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'ratings'[39m
+[37m      ORDER BY ordinal_position[39m
+2025-12-31 10:32:06:326 [37mdebug[39m: [37mExecuting (default): SELECT constraint_name[39m
+[37m      FROM information_schema.table_constraints[39m
+[37m      WHERE table_name = 'ratings' AND constraint_type = 'CHECK'[39m
+2025-12-31 10:32:06:326 [37mdebug[39m: [37mExecuting (default): SELECT indexname FROM pg_indexes[39m
+[37m      WHERE tablename = 'ratings'[39m
+[37m      ORDER BY indexname[39m
+2025-12-31 10:32:06:326 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, is_nullable[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'feedbacks'[39m
+[37m      ORDER BY ordinal_position[39m
+2025-12-31 10:32:06:326 [37mdebug[39m: [37mExecuting (default): SELECT unnest(enum_range(NULL::enum_feedbacks_"feedbackStatus"))::text AS status[39m
+2025-12-31 10:32:31:3231 [37mdebug[39m: [37mExecuting (default): SELECT name FROM "SequelizeMeta" [39m
+[37m      WHERE name LIKE '%rating%' OR name LIKE '%feedback%'[39m
+[37m      ORDER BY name[39m
+2025-12-31 10:32:31:3231 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, is_nullable[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'ratings'[39m
+[37m      ORDER BY ordinal_position[39m
+2025-12-31 10:32:32:3232 [37mdebug[39m: [37mExecuting (default): SELECT constraint_name[39m
+[37m      FROM information_schema.table_constraints[39m
+[37m      WHERE table_name = 'ratings' AND constraint_type = 'CHECK'[39m
+[37m        AND constraint_name LIKE 'ratings_%'[39m
+2025-12-31 10:32:32:3232 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, is_nullable[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'feedbacks'[39m
+[37m      ORDER BY ordinal_position[39m
+2025-12-31 10:32:32:3232 [37mdebug[39m: [37mExecuting (default): SELECT column_name, data_type, is_nullable[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'feedback_responses'[39m
+[37m      ORDER BY ordinal_position[39m
+2025-12-31 10:32:32:3232 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        tc.table_name,[39m
+[37m        kcu.column_name,[39m
+[37m        ccu.table_name AS foreign_table,[39m
+[37m        ccu.column_name AS foreign_column[39m
+[37m      FROM information_schema.table_constraints AS tc[39m
+[37m      JOIN information_schema.key_column_usage AS kcu[39m
+[37m        ON tc.constraint_name = kcu.constraint_name[39m
+[37m      JOIN information_schema.constraint_column_usage AS ccu[39m
+[37m        ON ccu.constraint_name = tc.constraint_name[39m
+[37m      WHERE tc.constraint_type = 'FOREIGN KEY'[39m
+[37m        AND tc.table_name IN ('ratings', 'feedbacks', 'feedback_responses')[39m
+[37m      ORDER BY tc.table_name[39m
+2025-12-31 10:33:59:3359 [37mdebug[39m: [37mExecuting (default): SELECT table_name [39m
+[37m      FROM information_schema.tables [39m
+[37m      WHERE table_schema = 'public' [39m
+[37m        AND table_type = 'BASE TABLE'[39m
+[37m        AND table_name NOT IN ('SequelizeMeta')[39m
+[37m      ORDER BY table_name[39m
+2025-12-31 10:33:59:3359 [37mdebug[39m: [37mExecuting (default): SELECT COUNT(*) as count[39m
+[37m      FROM information_schema.table_constraints[39m
+[37m      WHERE constraint_type = 'FOREIGN KEY'[39m
+[37m        AND table_schema = 'public'[39m
+2025-12-31 10:33:59:3359 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        tc.table_name,[39m
+[37m        kcu.column_name,[39m
+[37m        ccu.table_name AS references_table[39m
+[37m      FROM information_schema.table_constraints AS tc[39m
+[37m      JOIN information_schema.key_column_usage AS kcu[39m
+[37m        ON tc.constraint_name = kcu.constraint_name[39m
+[37m      JOIN information_schema.constraint_column_usage AS ccu[39m
+[37m        ON ccu.constraint_name = tc.constraint_name[39m
+[37m      WHERE tc.constraint_type = 'FOREIGN KEY'[39m
+[37m        AND tc.table_schema = 'public'[39m
+[37m      ORDER BY tc.table_name, kcu.column_name[39m
+2025-12-31 10:34:00:340 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        tablename,[39m
+[37m        COUNT(*) as index_count[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE schemaname = 'public'[39m
+[37m      GROUP BY tablename[39m
+[37m      ORDER BY index_count DESC[39m
+2025-12-31 10:34:00:340 [37mdebug[39m: [37mExecuting (default): SELECT COUNT(*) as total[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE schemaname = 'public'[39m

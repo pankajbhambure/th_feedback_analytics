@@ -8,6 +8,9 @@ import Customer from './customer.model';
 import Region from './region.model';
 import Store from './store.model';
 import CustomerVisit from './customerVisit.model';
+import Rating from './rating.model';
+import Feedback from './feedback.model';
+import FeedbackResponse from './feedbackResponse.model';
 
 User.belongsToMany(Role, {
   through: UserRole,
@@ -75,4 +78,48 @@ CustomerVisit.belongsTo(Store, {
   as: 'store',
 });
 
-export { User, Role, UserRole, Otp, Channel, FeedbackRaw, Customer, Region, Store, CustomerVisit };
+CustomerVisit.hasOne(Rating, {
+  foreignKey: 'customerVisitId',
+  as: 'rating',
+});
+
+Rating.belongsTo(CustomerVisit, {
+  foreignKey: 'customerVisitId',
+  as: 'visit',
+});
+
+CustomerVisit.hasOne(Feedback, {
+  foreignKey: 'customerVisitId',
+  as: 'feedback',
+});
+
+Feedback.belongsTo(CustomerVisit, {
+  foreignKey: 'customerVisitId',
+  as: 'visit',
+});
+
+Feedback.hasMany(FeedbackResponse, {
+  foreignKey: 'feedbackId',
+  as: 'responses',
+});
+
+FeedbackResponse.belongsTo(Feedback, {
+  foreignKey: 'feedbackId',
+  as: 'feedback',
+});
+
+export {
+  User,
+  Role,
+  UserRole,
+  Otp,
+  Channel,
+  FeedbackRaw,
+  Customer,
+  Region,
+  Store,
+  CustomerVisit,
+  Rating,
+  Feedback,
+  FeedbackResponse,
+};
