@@ -184,10 +184,10 @@ curl -X POST http://localhost:3011/api/v1/auth/login-otp \
 **Description:** Verify OTP for login or registration. Returns JWT token on success.
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/verify-otp \
+curl -X POST http://localhost:3011/api/v1/auth/verify-otp \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com",
+    "email": "dk@vnnogile.com",
     "otp": "123456",
     "purpose": "LOGIN"
   }'
