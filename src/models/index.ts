@@ -3,6 +3,7 @@ import Role from './role.model';
 import UserRole from './userRole.model';
 import Otp from './otp.model';
 import Channel from './channel.model';
+import FeedbackRaw from './feedbackRaw.model';
 
 User.belongsToMany(Role, {
   through: UserRole,
@@ -28,4 +29,16 @@ Otp.belongsTo(User, {
   as: 'user',
 });
 
-export { User, Role, UserRole, Otp, Channel };
+Channel.hasMany(FeedbackRaw, {
+  foreignKey: 'channelId',
+  sourceKey: 'channelId',
+  as: 'feedbackRaw',
+});
+
+FeedbackRaw.belongsTo(Channel, {
+  foreignKey: 'channelId',
+  targetKey: 'channelId',
+  as: 'channel',
+});
+
+export { User, Role, UserRole, Otp, Channel, FeedbackRaw };
