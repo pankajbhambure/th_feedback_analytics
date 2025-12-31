@@ -4,6 +4,7 @@ import UserRole from './userRole.model';
 import Otp from './otp.model';
 import Channel from './channel.model';
 import FeedbackRaw from './feedbackRaw.model';
+import Customer from './customer.model';
 
 User.belongsToMany(Role, {
   through: UserRole,
@@ -41,4 +42,4 @@ FeedbackRaw.belongsTo(Channel, {
   as: 'channel',
 });
 
-export { User, Role, UserRole, Otp, Channel, FeedbackRaw };
+export { User, Role, UserRole, Otp, Channel, FeedbackRaw, Customer };
