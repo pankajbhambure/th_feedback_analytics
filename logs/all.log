@@ -32,3 +32,43 @@
 [37m        ON ccu.constraint_name = tc.constraint_name[39m
 [37m      WHERE tc.constraint_type = 'FOREIGN KEY'[39m
 [37m        AND tc.table_name = 'stores'[39m
+2025-12-31 10:11:15:1115 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        column_name,[39m
+[37m        data_type,[39m
+[37m        is_nullable,[39m
+[37m        column_default[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'customer_visits'[39m
+[37m      ORDER BY ordinal_position[39m
+2025-12-31 10:11:15:1115 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        indexname,[39m
+[37m        indexdef[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE tablename = 'customer_visits'[39m
+[37m      ORDER BY indexname[39m
+2025-12-31 10:11:15:1115 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        tc.constraint_name,[39m
+[37m        kcu.column_name,[39m
+[37m        ccu.table_name AS foreign_table,[39m
+[37m        ccu.column_name AS foreign_column[39m
+[37m      FROM information_schema.table_constraints AS tc[39m
+[37m      JOIN information_schema.key_column_usage AS kcu[39m
+[37m        ON tc.constraint_name = kcu.constraint_name[39m
+[37m      JOIN information_schema.constraint_column_usage AS ccu[39m
+[37m        ON ccu.constraint_name = tc.constraint_name[39m
+[37m      WHERE tc.constraint_type = 'FOREIGN KEY'[39m
+[37m        AND tc.table_name = 'customer_visits'[39m
+2025-12-31 10:11:16:1116 [37mdebug[39m: [37mExecuting (default): SELECT unnest(enum_range(NULL::enum_customer_visits_sentiment))::text AS sentiment_value[39m
+2025-12-31 10:11:33:1133 [37mdebug[39m: [37mExecuting (default): SELECT id FROM customers LIMIT 1[39m
+2025-12-31 10:11:34:1134 [37mdebug[39m: [37mExecuting (default): SELECT id FROM stores LIMIT 1[39m
+2025-12-31 10:12:36:1236 [37mdebug[39m: [37mExecuting (default): SELECT name FROM "SequelizeMeta" [39m
+[37m      WHERE name LIKE '%customer-visits%'[39m
+2025-12-31 10:12:36:1236 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        COUNT(*) FILTER (WHERE column_name IN ('customerId', 'storeId')) as fk_count,[39m
+[37m        COUNT(*) FILTER (WHERE column_name LIKE 'visit%') as time_dimensions,[39m
+[37m        COUNT(*) as total_columns[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'customer_visits'[39m
+2025-12-31 10:12:36:1236 [37mdebug[39m: [37mExecuting (default): SELECT COUNT(*) as count[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE tablename = 'customer_visits'[39m

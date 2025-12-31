@@ -5,6 +5,9 @@ import Otp from './otp.model';
 import Channel from './channel.model';
 import FeedbackRaw from './feedbackRaw.model';
 import Customer from './customer.model';
+import Region from './region.model';
+import Store from './store.model';
+import CustomerVisit from './customerVisit.model';
 
 User.belongsToMany(Role, {
   through: UserRole,
@@ -42,4 +45,34 @@ FeedbackRaw.belongsTo(Channel, {
   as: 'channel',
 });
 
-export { User, Role, UserRole, Otp, Channel, FeedbackRaw, Customer };
+Region.hasMany(Store, {
+  foreignKey: 'regionId',
+  as: 'stores',
+});
+
+Store.belongsTo(Region, {
+  foreignKey: 'regionId',
+  as: 'region',
+});
+
+Customer.hasMany(CustomerVisit, {
+  foreignKey: 'customerId',
+  as: 'visits',
+});
+
+CustomerVisit.belongsTo(Customer, {
+  foreignKey: 'customerId',
+  as: 'customer',
+});
+
+Store.hasMany(CustomerVisit, {
+  foreignKey: 'storeId',
+  as: 'visits',
+});
+
+CustomerVisit.belongsTo(Store, {
+  foreignKey: 'storeId',
+  as: 'store',
+});
+
+export { User, Role, UserRole, Otp, Channel, FeedbackRaw, Customer, Region, Store, CustomerVisit };
