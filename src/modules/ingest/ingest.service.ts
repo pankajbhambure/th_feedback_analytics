@@ -110,7 +110,7 @@ export class IngestService {
       logger.info(`Fetching from ${url.toString()}`);
       const data = await this.fetchWithAuth(url.toString(), channel, channel.httpMethod);
 
-      await this.sleep(100);
+      await this.sleep(500);
 
       if (Array.isArray(data)) {
         return data;
