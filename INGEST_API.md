@@ -7,7 +7,7 @@ REST API endpoint for ingesting Instore feedback data into the feedback_raw tabl
 ## Endpoint
 
 ```
-POST /api/ingest/instore
+POST /api/v1/ingest/instore
 ```
 
 ## Authentication
@@ -17,6 +17,25 @@ Requires a valid JWT token in the Authorization header:
 ```
 Authorization: Bearer <your-jwt-token>
 ```
+
+## Configuration Requirements
+
+Before using this endpoint, ensure the Instore API key is configured:
+
+1. Update the channel configuration with your actual API key:
+```sql
+UPDATE channels
+SET "authConfig" = jsonb_set(
+  "authConfig"::jsonb,
+  '{apiKey}',
+  '"YOUR_ACTUAL_API_KEY_HERE"'
+)
+WHERE "channelId" = 'instore';
+```
+
+2. Or use the provided script: `update-instore-api-key.sql`
+
+See [INGEST_API_KEY_SETUP.md](./INGEST_API_KEY_SETUP.md) for detailed instructions.
 
 ## Request Body
 
@@ -94,6 +113,11 @@ API or database failure:
 }
 ```
 
+Common error messages:
+- `"API request failed: 401 Unauthorized"` - Invalid or missing Instore API key. See [INGEST_API_KEY_SETUP.md](./INGEST_API_KEY_SETUP.md)
+- `"Channel 'instore' not found or inactive"` - Channel not seeded or disabled
+- Database connection errors - Check database connectivity
+
 ## How It Works
 
 1. **Channel Configuration**: Reads Instore channel settings from the `channels` table:
@@ -126,7 +150,7 @@ API or database failure:
 ### Single Day
 
 ```bash
-curl -X POST http://localhost:3000/api/ingest/instore \
+curl -X POST http://localhost:3010/api/v1/ingest/instore \
   -H "Authorization: Bearer eyJhbGc..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -138,7 +162,7 @@ curl -X POST http://localhost:3000/api/ingest/instore \
 ### Date Range
 
 ```bash
-curl -X POST http://localhost:3000/api/ingest/instore \
+curl -X POST http://localhost:3010/api/v1/ingest/instore \
   -H "Authorization: Bearer eyJhbGc..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -150,7 +174,7 @@ curl -X POST http://localhost:3000/api/ingest/instore \
 ### Using JavaScript/Node.js
 
 ```javascript
-const response = await fetch('http://localhost:3000/api/ingest/instore', {
+const response = await fetch('http://localhost:3010/api/v1/ingest/instore', {
   method: 'POST',
   headers: {
     'Authorization': `Bearer ${token}`,
