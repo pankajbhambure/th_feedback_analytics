@@ -298,7 +298,7 @@ export class ProcessService {
     }
   }
 
-  async processBatch(batchSize: number = 100): Promise<ProcessingResult> {
+  private async processBatch(batchSize: number = 100): Promise<ProcessingResult> {
     const unprocessedFeedbacks = await FeedbackRaw.findAll({
       where: {
         channelId: 'instore',
@@ -309,11 +309,8 @@ export class ProcessService {
     });
 
     if (unprocessedFeedbacks.length === 0) {
-      logger.info('No unprocessed feedbacks found');
       return { processed: 0, skipped: 0 };
     }
-
-    logger.info(`Processing ${unprocessedFeedbacks.length} feedback records`);
 
     let processed = 0;
     let skipped = 0;
@@ -341,13 +338,42 @@ export class ProcessService {
       }
     }
 
-    logger.info(`Batch processing completed: ${processed} processed, ${skipped} skipped`);
-
     if (errors.length > 0) {
-      logger.warn(`Encountered ${errors.length} errors during processing`);
+      logger.warn(`Batch encountered ${errors.length} errors`);
     }
 
     return { processed, skipped };
+  }
+
+  async processAllInBackground(batchSize: number = 100): Promise<void> {
+    logger.info(`Starting background processing with batch size: ${batchSize}`);
+
+    let totalProcessed = 0;
+    let totalSkipped = 0;
+    let batchNumber = 0;
+
+    while (true) {
+      batchNumber++;
+
+      const result = await this.processBatch(batchSize);
+
+      totalProcessed += result.processed;
+      totalSkipped += result.skipped;
+
+      if (result.processed === 0 && result.skipped === 0) {
+        logger.info('No more records to process');
+        break;
+      }
+
+      logger.info(
+        `Batch ${batchNumber} completed: ${result.processed} processed, ${result.skipped} skipped. ` +
+        `Total: ${totalProcessed} processed, ${totalSkipped} skipped`
+      );
+    }
+
+    logger.info(
+      `Background processing completed. Final totals: ${totalProcessed} processed, ${totalSkipped} skipped`
+    );
   }
 }
 

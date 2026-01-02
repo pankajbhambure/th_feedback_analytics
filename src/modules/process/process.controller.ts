@@ -8,11 +8,13 @@ export class ProcessController {
     try {
       const { batchSize = 100 } = req.body;
 
-      logger.info(`Processing feedback_raw batch with size: ${batchSize}`);
+      logger.info(`Starting background processing with batch size: ${batchSize}`);
 
-      const result = await processService.processBatch(batchSize);
+      processService.processAllInBackground(batchSize).catch((error) => {
+        logger.error('Background processing failed:', error);
+      });
 
-      successResponse(res, result, 'Batch processed successfully');
+      successResponse(res, { message: 'Processing started in background' }, 'Background processing initiated');
     } catch (error) {
       next(error);
     }
