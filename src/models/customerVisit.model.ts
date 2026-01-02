@@ -12,6 +12,7 @@ export interface CustomerVisitAttributes {
   customerId: string;
   storeId: string;
   channelId: string;
+  feedbackRawId: string | null;
   feedbackDate: Date;
   visitDate: Date;
   visitDay: string;
@@ -29,7 +30,7 @@ export interface CustomerVisitAttributes {
 export interface CustomerVisitCreationAttributes
   extends Optional<
     CustomerVisitAttributes,
-    'id' | 'hasFoodOrder' | 'hasBeverageOrder' | 'createdAt' | 'updatedAt'
+    'id' | 'feedbackRawId' | 'hasFoodOrder' | 'hasBeverageOrder' | 'createdAt' | 'updatedAt'
   > {}
 
 class CustomerVisit
@@ -40,6 +41,7 @@ class CustomerVisit
   public customerId!: string;
   public storeId!: string;
   public channelId!: string;
+  public feedbackRawId!: string | null;
   public feedbackDate!: Date;
   public visitDate!: Date;
   public visitDay!: string;
@@ -72,6 +74,14 @@ CustomerVisit.init(
     channelId: {
       type: DataTypes.STRING(20),
       allowNull: false,
+    },
+    feedbackRawId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: 'feedback_raw',
+        key: 'id',
+      },
     },
     feedbackDate: {
       type: DataTypes.DATE,
