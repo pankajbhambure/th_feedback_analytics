@@ -85,6 +85,7 @@ export class IngestService {
     };
 
     const response = await fetch(url, options);
+    console.log("Response ", response);
 
     if (!response.ok) {
       throw new Error(
