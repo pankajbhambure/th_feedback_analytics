@@ -63,6 +63,38 @@ curl -X POST http://your-server-ip:3010/api/v1/auth/verify-otp \
 curl http://your-server-ip:3010/api/v1/health
 ```
 
+## Ingest Endpoints
+
+### 1. Ingest Instore Feedback
+```bash
+curl -X POST http://your-server-ip:3010/api/v1/ingest/instore \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "fromDate": "2024-01-01",
+    "toDate": "2024-01-31"
+  }'
+```
+
+**Expected Response:**
+```json
+{
+  "success": true,
+  "message": "Ingestion completed",
+  "data": {
+    "message": "Ingestion completed",
+    "inserted": 150,
+    "skipped": 5
+  }
+}
+```
+
+**Notes:**
+- Requires authentication (JWT token)
+- Date format: YYYY-MM-DD
+- The endpoint will fetch feedback from the external Instore API for the specified date range
+- Returns counts of inserted and skipped records
+
 ## Troubleshooting Steps
 
 ### Step 1: Check if the Server is Running
