@@ -110,7 +110,7 @@ export class IngestService {
       logger.info(`Fetching from ${url.toString()}`);
       const data = await this.fetchWithAuth(url.toString(), channel, channel.httpMethod);
 
-      await this.sleep(500);
+      await this.sleep(1000);
 
       if (Array.isArray(data)) {
         return data;
@@ -153,7 +153,7 @@ export class IngestService {
           allFeedback.push(...feedbackItems);
           currentPage++;
 
-          await this.sleep(500);
+          await this.sleep(1000);
         }
       } catch (error) {
         logger.error(`Error fetching page ${currentPage}:`, error);
