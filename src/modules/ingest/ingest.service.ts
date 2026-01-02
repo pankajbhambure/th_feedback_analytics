@@ -153,7 +153,7 @@ export class IngestService {
           allFeedback.push(...feedbackItems);
           currentPage++;
 
-          await this.sleep(100);
+          await this.sleep(500);
         }
       } catch (error) {
         logger.error(`Error fetching page ${currentPage}:`, error);
