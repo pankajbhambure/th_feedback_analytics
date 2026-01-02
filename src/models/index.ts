@@ -11,6 +11,7 @@ import CustomerVisit from './customerVisit.model';
 import Rating from './rating.model';
 import Feedback from './feedback.model';
 import FeedbackResponse from './feedbackResponse.model';
+import StoreFeedbackDailyAgg from './storeFeedbackDailyAgg.model';
 
 User.belongsToMany(Role, {
   through: UserRole,
@@ -108,6 +109,38 @@ FeedbackResponse.belongsTo(Feedback, {
   as: 'feedback',
 });
 
+Store.hasMany(StoreFeedbackDailyAgg, {
+  foreignKey: 'store_id',
+  as: 'dailyAggregations',
+});
+
+StoreFeedbackDailyAgg.belongsTo(Store, {
+  foreignKey: 'store_id',
+  as: 'store',
+});
+
+Channel.hasMany(StoreFeedbackDailyAgg, {
+  foreignKey: 'channel_id',
+  sourceKey: 'channelId',
+  as: 'dailyAggregations',
+});
+
+StoreFeedbackDailyAgg.belongsTo(Channel, {
+  foreignKey: 'channel_id',
+  targetKey: 'channelId',
+  as: 'channel',
+});
+
+Region.hasMany(StoreFeedbackDailyAgg, {
+  foreignKey: 'region_id',
+  as: 'dailyAggregations',
+});
+
+StoreFeedbackDailyAgg.belongsTo(Region, {
+  foreignKey: 'region_id',
+  as: 'region',
+});
+
 export {
   User,
   Role,
@@ -122,4 +155,5 @@ export {
   Rating,
   Feedback,
   FeedbackResponse,
+  StoreFeedbackDailyAgg,
 };

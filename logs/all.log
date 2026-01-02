@@ -163,3 +163,32 @@
 [37m      FROM information_schema.columns[39m
 [37m      WHERE table_name = 'feedback_responses'[39m
 [37m        AND column_name = 'responseDate'[39m
+2026-01-02 05:52:15:5215 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        column_name, [39m
+[37m        data_type, [39m
+[37m        is_nullable,[39m
+[37m        column_default[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'store_feedback_daily_agg'[39m
+[37m      ORDER BY ordinal_position[39m
+2026-01-02 05:52:16:5216 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        tc.constraint_name,[39m
+[37m        tc.constraint_type,[39m
+[37m        kcu.column_name,[39m
+[37m        ccu.table_name AS foreign_table_name,[39m
+[37m        ccu.column_name AS foreign_column_name[39m
+[37m      FROM information_schema.table_constraints AS tc[39m
+[37m      JOIN information_schema.key_column_usage AS kcu[39m
+[37m        ON tc.constraint_name = kcu.constraint_name[39m
+[37m        AND tc.table_schema = kcu.table_schema[39m
+[37m      LEFT JOIN information_schema.constraint_column_usage AS ccu[39m
+[37m        ON ccu.constraint_name = tc.constraint_name[39m
+[37m        AND ccu.table_schema = tc.table_schema[39m
+[37m      WHERE tc.table_name = 'store_feedback_daily_agg'[39m
+[37m      ORDER BY tc.constraint_type, tc.constraint_name[39m
+2026-01-02 05:52:16:5216 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        indexname,[39m
+[37m        indexdef[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE tablename = 'store_feedback_daily_agg'[39m
+[37m      ORDER BY indexname[39m
