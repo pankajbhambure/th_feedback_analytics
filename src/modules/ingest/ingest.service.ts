@@ -49,6 +49,10 @@ export class IngestService {
     return result;
   }
 
+  private async sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   private async fetchWithAuth(
     url: string,
     channel: Channel,
@@ -106,6 +110,8 @@ export class IngestService {
       logger.info(`Fetching from ${url.toString()}`);
       const data = await this.fetchWithAuth(url.toString(), channel, channel.httpMethod);
 
+      await this.sleep(100);
+
       if (Array.isArray(data)) {
         return data;
       } else if (data.data && Array.isArray(data.data)) {
@@ -146,6 +152,8 @@ export class IngestService {
         } else {
           allFeedback.push(...feedbackItems);
           currentPage++;
+
+          await this.sleep(100);
         }
       } catch (error) {
         logger.error(`Error fetching page ${currentPage}:`, error);
