@@ -7,13 +7,15 @@ export interface StoreAttributes {
   storeCode: string;
   regionId: string;
   city: string;
+  storeName: string | null;
+  email: string | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface StoreCreationAttributes
-  extends Optional<StoreAttributes, 'id' | 'isActive' | 'createdAt' | 'updatedAt'> {}
+  extends Optional<StoreAttributes, 'id' | 'storeName' | 'email' | 'isActive' | 'createdAt' | 'updatedAt'> {}
 
 class Store extends Model<StoreAttributes, StoreCreationAttributes> implements StoreAttributes {
   public id!: string;
@@ -21,6 +23,8 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
   public storeCode!: string;
   public regionId!: string;
   public city!: string;
+  public storeName!: string | null;
+  public email!: string | null;
   public isActive!: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -49,6 +53,14 @@ Store.init(
     city: {
       type: DataTypes.STRING(100),
       allowNull: false,
+    },
+    storeName: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
     isActive: {
       type: DataTypes.BOOLEAN,

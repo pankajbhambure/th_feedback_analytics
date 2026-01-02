@@ -192,3 +192,18 @@
 [37m      FROM pg_indexes[39m
 [37m      WHERE tablename = 'store_feedback_daily_agg'[39m
 [37m      ORDER BY indexname[39m
+2026-01-02 06:41:15:4115 [37mdebug[39m: [37mExecuting (default): SELECT [39m
+[37m        column_name, [39m
+[37m        data_type, [39m
+[37m        is_nullable,[39m
+[37m        character_maximum_length,[39m
+[37m        column_default[39m
+[37m      FROM information_schema.columns[39m
+[37m      WHERE table_name = 'stores'[39m
+[37m      ORDER BY ordinal_position[39m
+2026-01-02 06:41:15:4115 [37mdebug[39m: [37mExecuting (default): SELECT[39m
+[37m        indexname,[39m
+[37m        indexdef[39m
+[37m      FROM pg_indexes[39m
+[37m      WHERE tablename = 'stores'[39m
+[37m      ORDER BY indexname[39m
