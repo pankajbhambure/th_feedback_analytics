@@ -5,6 +5,7 @@ export interface StoreAttributes {
   id: string;
   storeId: string;
   storeCode: string;
+  storeLocation: string;
   regionId: string;
   city: string;
   storeName: string | null;
@@ -21,6 +22,7 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
   public id!: string;
   public storeId!: string;
   public storeCode!: string;
+  public storeLocation!: string;
   public regionId!: string;
   public city!: string;
   public storeName!: string | null;
@@ -44,6 +46,10 @@ Store.init(
     },
     storeCode: {
       type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    storeLocation: {
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     regionId: {

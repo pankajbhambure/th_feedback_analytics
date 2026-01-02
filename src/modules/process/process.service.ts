@@ -50,15 +50,20 @@ export class ProcessService {
   }
 
   private async resolveStore(storeIdentifier: string): Promise<Store | null> {
-    const store = await Store.findOne({
+    let store = await Store.findOne({
       where: { storeId: storeIdentifier },
     });
 
     if (!store) {
-      const storeByCode = await Store.findOne({
+      store = await Store.findOne({
         where: { storeCode: storeIdentifier },
       });
-      return storeByCode;
+    }
+
+    if (!store) {
+      store = await Store.findOne({
+        where: { storeLocation: storeIdentifier },
+      });
     }
 
     return store;
