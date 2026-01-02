@@ -66,6 +66,13 @@ export class IngestService {
       if (token) {
         headers[authHeaderName] = `${headerPrefix} ${token}`;
       }
+    } else if (channel.authType === AuthType.API_KEY && channel.authConfig) {
+      const apiKeyHeaderName = channel.authConfig.apiKeyHeaderName || 'x-api-key';
+      const apiKey = channel.authConfig.apiKey;
+
+      if (apiKey) {
+        headers[apiKeyHeaderName] = apiKey;
+      }
     }
 
     const options: RequestInit = {

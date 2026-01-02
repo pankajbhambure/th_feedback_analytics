@@ -9,6 +9,7 @@ export enum HttpMethod {
 export enum AuthType {
   NONE = 'NONE',
   JWT = 'JWT',
+  API_KEY = 'API_KEY',
 }
 
 export enum PaginationType {
@@ -21,6 +22,9 @@ export interface AuthConfig {
   tokenResponseField?: string;
   authHeaderName?: string;
   headerPrefix?: string;
+  token?: string;
+  apiKey?: string;
+  apiKeyHeaderName?: string;
   [key: string]: any;
 }
 

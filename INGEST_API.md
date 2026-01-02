@@ -98,7 +98,7 @@ API or database failure:
 
 1. **Channel Configuration**: Reads Instore channel settings from the `channels` table:
    - API base URL
-   - Authentication type and credentials
+   - Authentication type (API_KEY) and credentials
    - Pagination settings
    - Date parameter names and format
 
