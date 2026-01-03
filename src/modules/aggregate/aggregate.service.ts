@@ -8,11 +8,11 @@ interface DailyAggregateResult {
 }
 
 interface AggregationRow {
-  store_id: string;
-  channel_id: string;
+  storeId: string;
+  channelId: string;
   visit_date: string;
   city: string;
-  region_id: string;
+  regionId: string;
   total_visits: number;
   unique_customer_count: number;
   repeat_customer_count: number;
@@ -40,30 +40,30 @@ export class AggregateService {
 
     const query = `
       SELECT
-        cv.store_id,
-        cv.channel_id,
-        DATE(cv.visit_date) as visit_date,
+        cv."storeId" as "storeId",
+        cv."channelId" as "channelId",
+        DATE(cv."visitDate") as visit_date,
         s.city,
-        s.region_id,
+        s."regionId" as "regionId",
         COUNT(cv.id) as total_visits,
-        COUNT(DISTINCT cv.customer_id) as unique_customer_count,
-        COUNT(DISTINCT CASE WHEN c.repeat_customer = true THEN cv.customer_id END) as repeat_customer_count,
-        AVG(r.overall_rating) as avg_overall_rating,
-        AVG(r.food_rating) as avg_food_rating,
-        AVG(r.beverage_rating) as avg_beverage_rating,
+        COUNT(DISTINCT cv."customerId") as unique_customer_count,
+        COUNT(DISTINCT CASE WHEN c."repeatCustomer" = true THEN cv."customerId" END) as repeat_customer_count,
+        AVG(r."overallRating") as avg_overall_rating,
+        AVG(r."foodRating") as avg_food_rating,
+        AVG(r."beverageRating") as avg_beverage_rating,
         COUNT(CASE WHEN cv.sentiment = 'Positive' THEN 1 END) as positive_count,
         COUNT(CASE WHEN cv.sentiment = 'Neutral' THEN 1 END) as neutral_count,
         COUNT(CASE WHEN cv.sentiment = 'Negative' THEN 1 END) as negative_count,
-        COUNT(CASE WHEN f.feedback_status = 'Pending' THEN 1 END) as pending_count,
-        COUNT(CASE WHEN f.feedback_status = 'Responded' THEN 1 END) as responded_count
+        COUNT(CASE WHEN f."feedbackStatus" = 'Pending' THEN 1 END) as pending_count,
+        COUNT(CASE WHEN f."feedbackStatus" = 'Responded' THEN 1 END) as responded_count
       FROM customer_visits cv
-      INNER JOIN stores s ON cv.store_id = s.id
-      INNER JOIN customers c ON cv.customer_id = c.id
-      LEFT JOIN ratings r ON cv.id = r.customer_visit_id
-      LEFT JOIN feedbacks f ON cv.id = f.customer_visit_id
-      WHERE cv.visit_date >= :startOfDay
-        AND cv.visit_date <= :endOfDay
-      GROUP BY cv.store_id, cv.channel_id, DATE(cv.visit_date), s.city, s.region_id
+      INNER JOIN stores s ON cv."storeId" = s.id
+      INNER JOIN customers c ON cv."customerId" = c.id
+      LEFT JOIN ratings r ON cv.id = r."customerVisitId"
+      LEFT JOIN feedbacks f ON cv.id = f."customerVisitId"
+      WHERE cv."visitDate" >= :startOfDay
+        AND cv."visitDate" <= :endOfDay
+      GROUP BY cv."storeId", cv."channelId", DATE(cv."visitDate"), s.city, s."regionId"
     `;
 
     const results = (await sequelize.query(query, {
@@ -80,11 +80,11 @@ export class AggregateService {
 
     for (const row of results) {
       await StoreFeedbackDailyAgg.upsert({
-        store_id: row.store_id,
-        channel_id: row.channel_id,
+        store_id: row.storeId,
+        channel_id: row.channelId,
         agg_date: new Date(row.visit_date),
         city: row.city,
-        region_id: row.region_id,
+        region_id: row.regionId,
         total_feedback_count: Number(row.total_visits),
         unique_customer_count: Number(row.unique_customer_count),
         repeat_customer_count: Number(row.repeat_customer_count),
