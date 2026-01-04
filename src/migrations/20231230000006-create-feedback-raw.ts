@@ -40,7 +40,7 @@ export default {
         allowNull: false,
       },
       processingStatus: {
-        type: DataTypes.ENUM('NEW', 'PROCESSED', 'FAILED'),
+        type: DataTypes.ENUM('NEW', 'PROCESSED', 'SKIPPED', 'FAILED'),
         defaultValue: 'NEW',
         allowNull: false,
       },
