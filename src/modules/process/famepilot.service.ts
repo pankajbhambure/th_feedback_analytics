@@ -18,7 +18,8 @@ interface SkippedRecord {
   externalFeedbackId: string;
   channelId: string;
   branchName: string;
-  skipReason: 'STORE_NOT_FOUND' | 'MULTIPLE_STORE_MATCH';
+  skipReason: 'STORE_NOT_FOUND' | 'MULTIPLE_STORE_MATCH' | 'ERROR';
+  errorMessage?: string;
   timestamp: Date;
 }
 
@@ -54,15 +55,22 @@ export class FamepilotProcessService {
     const logPath = path.join(logsDir, this.logFileName);
     const logContent = this.skippedRecords
       .map(record => {
-        return [
+        const lines = [
           `Feedback Raw ID: ${record.feedbackRawId}`,
           `External Feedback ID: ${record.externalFeedbackId}`,
           `Channel ID: ${record.channelId}`,
           `Branch Name: ${record.branchName}`,
           `Skip Reason: ${record.skipReason}`,
-          `Timestamp: ${record.timestamp.toISOString()}`,
-          '---',
-        ].join('\n');
+        ];
+
+        if (record.errorMessage) {
+          lines.push(`Error Message: ${record.errorMessage}`);
+        }
+
+        lines.push(`Timestamp: ${record.timestamp.toISOString()}`);
+        lines.push('---');
+
+        return lines.join('\n');
       })
       .join('\n');
 
@@ -103,7 +111,7 @@ export class FamepilotProcessService {
   private async resolveStoreFamepilot(branchName: string): Promise<Store | null | 'MULTIPLE'> {
     const stores = await Store.findAll({
       where: sequelize.where(
-        sequelize.fn('LOWER', sequelize.col('store_location')),
+        sequelize.fn('LOWER', sequelize.col('storeLocation')),
         {
           [Op.like]: `%${branchName.toLowerCase()}%`
         }
@@ -388,6 +396,21 @@ export class FamepilotProcessService {
         } catch (error: any) {
           logger.error(`Failed to process feedback ${feedbackRaw.id}:`, error.message);
           skipped++;
+
+          const branchName = this.extractFromPayload(
+            feedbackRaw.rawPayload,
+            'branch'
+          ) || 'N/A';
+
+          this.skippedRecords.push({
+            feedbackRawId: feedbackRaw.id,
+            externalFeedbackId: feedbackRaw.externalFeedbackId,
+            channelId: feedbackRaw.channelId,
+            branchName,
+            skipReason: 'ERROR',
+            errorMessage: error.message,
+            timestamp: new Date(),
+          });
 
           await feedbackRaw.update({
             processingStatus: ProcessingStatus.FAILED,
