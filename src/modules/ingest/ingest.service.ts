@@ -2,7 +2,6 @@ import crypto from 'crypto';
 import Channel, { AuthType, PaginationType } from '../../models/channel.model';
 import FeedbackRaw, { ProcessingStatus } from '../../models/feedbackRaw.model';
 import { logger } from '../../utils/logger';
-import { env } from '../../config/env';
 
 interface IngestionResult {
   inserted: number;
@@ -317,8 +316,18 @@ export class IngestService {
     const allReviews: any[] = [];
     const baseUrl = 'https://api.famepilot.com/v1/api/customer/reviews/';
 
-    if (!env.FAMEPILOT_APP_ID || !env.FAMEPILOT_API_KEY) {
-      throw new Error('Famepilot API credentials not configured');
+    const channel = await Channel.findOne({
+      where: { channelId: 'famepilot', isActive: true },
+    });
+
+    if (!channel || !channel.authConfig) {
+      throw new Error('Famepilot channel not found or not configured');
+    }
+
+    const { appId, apiKey, appIdHeaderName, apiKeyHeaderName } = channel.authConfig;
+
+    if (!appId || !apiKey) {
+      throw new Error('Famepilot API credentials not configured in channel authConfig');
     }
 
     let nextUrl: string | null = `${baseUrl}?start_date=${startDate}&end_date=${endDate}`;
@@ -328,8 +337,8 @@ export class IngestService {
 
       const headers: Record<string, string> = {
         accept: 'application/json',
-        appid: env.FAMEPILOT_APP_ID,
-        'x-api-key': env.FAMEPILOT_API_KEY,
+        [appIdHeaderName || 'appid']: appId,
+        [apiKeyHeaderName || 'x-api-key']: apiKey,
       };
 
       try {
