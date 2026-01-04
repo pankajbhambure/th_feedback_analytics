@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import ingestController from './ingest.controller';
 import { validate } from '../../middlewares/validate.middleware';
-import { ingestInstoreSchema } from './ingest.validator';
+import { ingestInstoreSchema, ingestFamepilotSchema } from './ingest.validator';
 import { authenticateToken } from '../../middlewares/auth.middleware';
 
 const router = Router();
@@ -11,6 +11,13 @@ router.post(
   authenticateToken,
   validate(ingestInstoreSchema),
   ingestController.ingestInstore.bind(ingestController)
+);
+
+router.post(
+  '/famepilot',
+  authenticateToken,
+  validate(ingestFamepilotSchema),
+  ingestController.ingestFamepilot.bind(ingestController)
 );
 
 export default router;

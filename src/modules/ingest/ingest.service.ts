@@ -2,14 +2,21 @@ import crypto from 'crypto';
 import Channel, { AuthType, PaginationType } from '../../models/channel.model';
 import FeedbackRaw, { ProcessingStatus } from '../../models/feedbackRaw.model';
 import { logger } from '../../utils/logger';
+import { env } from '../../config/env';
 
 interface IngestionResult {
   inserted: number;
   skipped: number;
+  totalFetched?: number;
 }
 
 interface FeedbackItem {
   [key: string]: any;
+}
+
+interface FamepilotApiResponse {
+  results?: any[];
+  next?: string | null;
 }
 
 export class IngestService {
@@ -278,6 +285,168 @@ export class IngestService {
     );
 
     return {
+      inserted: totalInserted,
+      skipped: totalSkipped,
+    };
+  }
+
+  private async mapProviderToChannel(providerName: string): Promise<string | null> {
+    const providerMap: Record<string, string> = {
+      swiggy: 'swiggy',
+      zomato: 'zomato',
+      google: 'google',
+      magicpin: 'magicpin',
+    };
+
+    const channelId = providerMap[providerName.toLowerCase()];
+    if (!channelId) {
+      return null;
+    }
+
+    const channel = await Channel.findOne({
+      where: { channelId },
+    });
+
+    return channel ? channelId : null;
+  }
+
+  private async fetchFamepilotReviews(
+    startDate: string,
+    endDate: string
+  ): Promise<any[]> {
+    const allReviews: any[] = [];
+    const baseUrl = 'https://api.famepilot.com/v1/api/customer/reviews/';
+
+    if (!env.FAMEPILOT_APP_ID || !env.FAMEPILOT_API_KEY) {
+      throw new Error('Famepilot API credentials not configured');
+    }
+
+    let nextUrl: string | null = `${baseUrl}?start_date=${startDate}&end_date=${endDate}`;
+
+    while (nextUrl) {
+      logger.info(`Fetching Famepilot reviews from: ${nextUrl}`);
+
+      const headers: Record<string, string> = {
+        accept: 'application/json',
+        appid: env.FAMEPILOT_APP_ID,
+        'x-api-key': env.FAMEPILOT_API_KEY,
+      };
+
+      try {
+        const response = await fetch(nextUrl, {
+          method: 'GET',
+          headers,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          logger.error(
+            `Famepilot API request failed: ${response.status} ${response.statusText}`,
+            errorText
+          );
+          throw new Error(
+            `Famepilot API request failed: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = (await response.json()) as FamepilotApiResponse;
+
+        if (data.results && Array.isArray(data.results)) {
+          allReviews.push(...data.results);
+          logger.info(`Fetched ${data.results.length} reviews from current page`);
+        }
+
+        nextUrl = data.next || null;
+
+        if (nextUrl) {
+          await this.sleep(1000);
+        }
+      } catch (error: any) {
+        logger.error('Error fetching Famepilot reviews:', error.message);
+        throw error;
+      }
+    }
+
+    return allReviews;
+  }
+
+  async ingestFamepilotFeedback(
+    startDate: string,
+    endDate: string
+  ): Promise<IngestionResult> {
+    logger.info(`Starting Famepilot ingestion from ${startDate} to ${endDate}`);
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      throw new Error('Invalid date format. Use YYYY-MM-DD');
+    }
+
+    if (start > end) {
+      throw new Error('startDate must be before or equal to endDate');
+    }
+
+    const reviews = await this.fetchFamepilotReviews(startDate, endDate);
+
+    logger.info(`Fetched ${reviews.length} total reviews from Famepilot`);
+
+    let totalInserted = 0;
+    let totalSkipped = 0;
+
+    for (const review of reviews) {
+      try {
+        const providerName = review.provider_name;
+        if (!providerName) {
+          logger.warn('Review missing provider_name, skipping:', review.id);
+          totalSkipped++;
+          continue;
+        }
+
+        const channelId = await this.mapProviderToChannel(providerName);
+        if (!channelId) {
+          logger.warn(
+            `Unknown provider '${providerName}' for review ${review.id}, skipping`
+          );
+          totalSkipped++;
+          continue;
+        }
+
+        const externalFeedbackId = String(review.id);
+        if (!externalFeedbackId) {
+          logger.warn('Review missing id, skipping');
+          totalSkipped++;
+          continue;
+        }
+
+        const feedbackTimestamp = review.created_at
+          ? new Date(review.created_at)
+          : new Date();
+
+        const inserted = await this.insertFeedback(
+          channelId,
+          externalFeedbackId,
+          feedbackTimestamp,
+          review
+        );
+
+        if (inserted) {
+          totalInserted++;
+        } else {
+          totalSkipped++;
+        }
+      } catch (error: any) {
+        logger.error(`Error processing review ${review.id}:`, error.message);
+        totalSkipped++;
+      }
+    }
+
+    logger.info(
+      `Famepilot ingestion completed: ${totalInserted} inserted, ${totalSkipped} skipped out of ${reviews.length} total`
+    );
+
+    return {
+      totalFetched: reviews.length,
       inserted: totalInserted,
       skipped: totalSkipped,
     };

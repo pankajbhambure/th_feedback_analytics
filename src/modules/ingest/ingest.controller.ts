@@ -21,6 +21,25 @@ export class IngestController {
       next(error);
     }
   }
+
+  async ingestFamepilot(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { startDate, endDate } = req.body;
+
+      logger.info(`Starting Famepilot ingestion from ${startDate} to ${endDate}`);
+
+      const result = await ingestService.ingestFamepilotFeedback(startDate, endDate);
+
+      successResponse(res, {
+        message: 'Famepilot ingestion completed',
+        totalFetched: result.totalFetched,
+        inserted: result.inserted,
+        skipped: result.skipped,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new IngestController();

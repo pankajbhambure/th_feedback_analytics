@@ -28,3 +28,30 @@ export const ingestInstoreSchema = z.object({
     }
   ),
 });
+
+export const ingestFamepilotSchema = z.object({
+  body: z.object({
+    startDate: z
+      .string()
+      .regex(dateRegex, 'startDate must be in YYYY-MM-DD format')
+      .refine((date) => !isNaN(Date.parse(date)), {
+        message: 'startDate must be a valid date',
+      }),
+    endDate: z
+      .string()
+      .regex(dateRegex, 'endDate must be in YYYY-MM-DD format')
+      .refine((date) => !isNaN(Date.parse(date)), {
+        message: 'endDate must be a valid date',
+      }),
+  }).refine(
+    (data) => {
+      const start = new Date(data.startDate);
+      const end = new Date(data.endDate);
+      return start <= end;
+    },
+    {
+      message: 'startDate must be before or equal to endDate',
+      path: ['startDate'],
+    }
+  ),
+});

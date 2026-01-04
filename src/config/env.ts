@@ -20,6 +20,8 @@ const envSchema = z.object({
   GMAIL_APP_PASSWORD: z.string().optional(),
   OUTLOOK_USER: z.string().optional(),
   OUTLOOK_PASSWORD: z.string().optional(),
+  FAMEPILOT_APP_ID: z.string().optional(),
+  FAMEPILOT_API_KEY: z.string().optional(),
 });
 
 const parseEnv = () => {
