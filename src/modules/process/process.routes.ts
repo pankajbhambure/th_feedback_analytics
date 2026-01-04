@@ -20,4 +20,10 @@ router.post(
   processController.processFamepilotFeedbackRaw
 );
 
+router.get(
+  '/feedback-raw/debug',
+  authenticateToken,
+  processController.debugFeedbackRaw
+);
+
 export default router;

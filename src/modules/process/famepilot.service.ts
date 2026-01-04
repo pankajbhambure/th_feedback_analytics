@@ -414,6 +414,58 @@ export class FamepilotProcessService {
       logFile: this.logFileName,
     };
   }
+
+  async getFeedbackRawStats(): Promise<any> {
+    const totalCount = await FeedbackRaw.count();
+
+    const channelStats = await FeedbackRaw.findAll({
+      attributes: [
+        'channelId',
+        'processingStatus',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+        [sequelize.fn('MIN', sequelize.col('createdAt')), 'minCreatedAt'],
+        [sequelize.fn('MAX', sequelize.col('createdAt')), 'maxCreatedAt'],
+        [sequelize.fn('MIN', sequelize.col('feedbackTimestamp')), 'minFeedbackTimestamp'],
+        [sequelize.fn('MAX', sequelize.col('feedbackTimestamp')), 'maxFeedbackTimestamp'],
+      ],
+      group: ['channelId', 'processingStatus'],
+      raw: true,
+    });
+
+    const famepilotChannels = await FeedbackRaw.findAll({
+      attributes: [
+        'channelId',
+        'processingStatus',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+      ],
+      where: {
+        channelId: {
+          [Op.in]: FAMEPILOT_CHANNELS,
+        },
+      },
+      group: ['channelId', 'processingStatus'],
+      raw: true,
+    });
+
+    const sampleRecords = await FeedbackRaw.findAll({
+      where: {
+        channelId: {
+          [Op.in]: FAMEPILOT_CHANNELS,
+        },
+      },
+      order: [['createdAt', 'DESC']],
+      limit: 5,
+      attributes: ['id', 'channelId', 'externalFeedbackId', 'processingStatus', 'createdAt', 'feedbackTimestamp'],
+    });
+
+    return {
+      totalCount,
+      channelStats,
+      famepilotChannels,
+      sampleRecords,
+      famepilotChannelList: FAMEPILOT_CHANNELS,
+    };
+  }
 }
 
 export default new FamepilotProcessService();

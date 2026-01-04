@@ -49,6 +49,15 @@ export class ProcessController {
       next(error);
     }
   }
+
+  async debugFeedbackRaw(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const stats = await famepilotProcessService.getFeedbackRawStats();
+      successResponse(res, stats, 'Feedback raw statistics');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new ProcessController();
