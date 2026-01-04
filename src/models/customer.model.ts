@@ -73,13 +73,6 @@ Customer.init(
     sequelize,
     tableName: 'customers',
     timestamps: true,
-    validate: {
-      atLeastOneContact() {
-        if (!this.email && !this.phone) {
-          throw new Error('At least one of email or phone must be provided');
-        }
-      },
-    },
     indexes: [
       {
         unique: true,
