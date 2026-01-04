@@ -67,7 +67,7 @@ export class FamepilotProcessService {
       .join('\n');
 
     fs.writeFileSync(logPath, logContent, 'utf-8');
-    logger.info(`Skip log written to: ${this.logFileName}`);
+    logger.info(`Skip log written to: ${logPath}`);
   }
 
   private extractFromPayload(payload: Record<string, any>, ...keys: string[]): any {
@@ -404,14 +404,18 @@ export class FamepilotProcessService {
 
     this.writeLogFile();
 
+    const logFilePath = this.skippedRecords.length > 0
+      ? path.join(process.cwd(), 'logs', this.logFileName)
+      : '';
+
     logger.info(
-      `Famepilot processing completed: ${processed} processed, ${skipped} skipped, log: ${this.logFileName}`
+      `Famepilot processing completed: ${processed} processed, ${skipped} skipped, log: ${logFilePath || 'none'}`
     );
 
     return {
       processed,
       skipped,
-      logFile: this.logFileName,
+      logFile: logFilePath,
     };
   }
 
