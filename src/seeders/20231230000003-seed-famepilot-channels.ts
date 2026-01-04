@@ -29,6 +29,31 @@ export default {
     await queryInterface.bulkInsert('channels', [
       {
         id: uuidv4(),
+        channelId: 'famepilot',
+        channelName: 'Famepilot API',
+        baseUrl: 'https://api.famepilot.com/v1/api/customer/reviews/',
+        httpMethod: 'GET',
+        authType: 'API_KEY',
+        authConfig: JSON.stringify({
+          appIdHeaderName: 'appid',
+          apiKeyHeaderName: 'x-api-key',
+          appId: 'your-famepilot-app-id-here',
+          apiKey: 'your-famepilot-api-key-here',
+        }),
+        dateFromParam: 'start_date',
+        dateToParam: 'end_date',
+        dateFormat: 'YYYY-MM-DD',
+        paginationType: 'PAGE',
+        pageParam: 'page',
+        startPage: 1,
+        requestSchema: null,
+        responseSchema: null,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: uuidv4(),
         channelId: 'zomato',
         channelName: 'Zomato Reviews',
         ...famepilotConfig,
@@ -56,7 +81,7 @@ export default {
 
   down: async (queryInterface: QueryInterface): Promise<void> => {
     await queryInterface.bulkDelete('channels', {
-      channelId: ['zomato', 'swiggy', 'google', 'magicpin'],
+      channelId: ['famepilot', 'zomato', 'swiggy', 'google', 'magicpin'],
     });
   },
 };

@@ -101,8 +101,8 @@ Channel.init(
       unique: true,
       validate: {
         isIn: {
-          args: [['swiggy', 'zomato', 'google', 'instore', 'magicpin']],
-          msg: 'Invalid channel_id. Allowed values: swiggy, zomato, google, instore, magicpin',
+          args: [['famepilot', 'swiggy', 'zomato', 'google', 'instore', 'magicpin']],
+          msg: 'Invalid channel_id. Allowed values: famepilot, swiggy, zomato, google, instore, magicpin',
         },
       },
     },
