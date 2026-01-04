@@ -2,7 +2,7 @@ import { Router } from 'express';
 import processController from './process.controller';
 import { authenticateToken } from '../../middlewares/auth.middleware';
 import { validate } from '../../middlewares/validate.middleware';
-import { processFeedbackRawSchema } from './process.validator';
+import { processFeedbackRawSchema, processFamepilotFeedbackRawSchema } from './process.validator';
 
 const router = Router();
 
@@ -11,6 +11,13 @@ router.post(
   authenticateToken,
   validate(processFeedbackRawSchema),
   processController.processFeedbackRaw
+);
+
+router.post(
+  '/feedback-raw/famepilot',
+  authenticateToken,
+  validate(processFamepilotFeedbackRawSchema),
+  processController.processFamepilotFeedbackRaw
 );
 
 export default router;

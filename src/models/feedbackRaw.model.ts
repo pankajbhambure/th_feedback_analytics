@@ -4,6 +4,7 @@ import { sequelize } from '../config/sequelize';
 export enum ProcessingStatus {
   NEW = 'NEW',
   PROCESSED = 'PROCESSED',
+  SKIPPED = 'SKIPPED',
   FAILED = 'FAILED',
 }
 
