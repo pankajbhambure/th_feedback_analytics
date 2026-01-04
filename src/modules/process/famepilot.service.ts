@@ -364,11 +364,11 @@ export class FamepilotProcessService {
             [Op.in]: FAMEPILOT_CHANNELS,
           },
           processingStatus: ProcessingStatus.NEW,
-          createdAt: {
+          feedbackTimestamp: {
             [Op.between]: [startDateTime, endDateTime],
           },
         },
-        order: [['createdAt', 'ASC']],
+        order: [['feedbackTimestamp', 'ASC']],
         limit: batchSize,
         offset,
       });
