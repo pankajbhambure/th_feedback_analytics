@@ -97,7 +97,7 @@ export class AnalyticsService {
   private async calculateAverageRating(dateFilter: any): Promise<number> {
     const result = await Rating.findOne({
       attributes: [
-        [sequelize.fn('AVG', sequelize.col('ratings.overall_rating')), 'avgRating'],
+        [sequelize.fn('AVG', sequelize.col('Rating.overallRating')), 'avgRating'],
       ],
       include: [
         {
