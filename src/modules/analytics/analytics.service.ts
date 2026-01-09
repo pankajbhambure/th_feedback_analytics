@@ -91,7 +91,8 @@ export class AnalyticsService {
       return 0;
     }
 
-    return (positiveCount - negativeCount) / total;
+    const nss = ((positiveCount - negativeCount) / total) * 100;
+    return Math.round(nss * 100) / 100;
   }
 
   private async calculateAverageRating(dateFilter: any): Promise<number> {
@@ -108,11 +109,17 @@ export class AnalyticsService {
           required: true,
         },
       ],
+      where: {
+        overallRating: {
+          [Op.gte]: 1,
+        },
+      },
       raw: true,
     });
 
     const avgRating = result ? (result as any).avgRating : null;
-    return avgRating ? parseFloat(avgRating) : 0;
+    const rating = avgRating ? parseFloat(avgRating) : 0;
+    return Math.round(rating * 100) / 100;
   }
 
   private async calculateTotalFootcount(dateFilter: any): Promise<number> {
