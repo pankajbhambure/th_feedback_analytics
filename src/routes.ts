@@ -5,6 +5,7 @@ import userRoutes from './modules/users/user.routes';
 import ingestRoutes from './modules/ingest/ingest.routes';
 import processRoutes from './modules/process/process.routes';
 import aggregateRoutes from './modules/aggregate/aggregate.routes';
+import analyticsRoutes from './modules/analytics/analytics.routes';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/users', userRoutes);
 router.use('/ingest', ingestRoutes);
 router.use('/process', processRoutes);
 router.use('/aggregate', aggregateRoutes);
+router.use('/analytics', analyticsRoutes);
 
 export default router;
