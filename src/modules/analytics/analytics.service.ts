@@ -125,7 +125,7 @@ export class AnalyticsService {
 
   private async calculateRepeatCustomers(dateFilter: any): Promise<number> {
     const result = await CustomerVisit.findAll({
-      attributes: [[sequelize.fn('COUNT', sequelize.fn('DISTINCT', sequelize.col('customer_visits.customer_id'))), 'count']],
+      attributes: [[sequelize.fn('COUNT', sequelize.fn('DISTINCT', sequelize.col('CustomerVisit.customerId'))), 'count']],
       include: [
         {
           model: Customer,
